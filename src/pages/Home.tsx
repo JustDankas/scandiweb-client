@@ -5,9 +5,11 @@ import styles from "../styles";
 import axios from "axios";
 import ProductCopy from "../components/ProductCopy";
 import { useProductContext } from "../ProductContext";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { TbMoodEmpty } from "react-icons/tb";
 
 function Home() {
-  const { products } = useProductContext();
+  const { products, fetching } = useProductContext();
   const [removeIdTable, setRemoveIdTable] = useState<Map<string, boolean>>(
     new Map()
   );
@@ -61,9 +63,28 @@ function Home() {
               handleRemove={(id) => handleAddRemove(id)}
             />
           );
-          return <></>;
         })}
       </ul>
+      {!fetching && products.length === 0 && (
+        <>
+          <div className="xs:text-[80px] text-[40px] text-bold whitespace-nowrap ">
+            No products
+          </div>
+          <div className="xs:text-[80px] text-[40px]">
+            <TbMoodEmpty />
+          </div>
+        </>
+      )}
+      {fetching && products.length === 0 && (
+        <>
+          <div className="xs:text-[80px] text-[40px] text-bold whitespace-nowrap ">
+            Starting back-end
+          </div>
+          <div className="spin-anim xs:text-[80px] text-[40px]">
+            <AiOutlineLoading3Quarters />
+          </div>
+        </>
+      )}
     </div>
   );
 }

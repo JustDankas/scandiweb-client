@@ -27,6 +27,7 @@ interface IProduct {
 
 interface IProductContext {
   products: IProduct[];
+  fetching: boolean;
 }
 
 const ProductContext = createContext({} as IProductContext);
@@ -37,20 +38,21 @@ export function useProductContext() {
 
 export function ProductProvider({ children }: IProductProvider) {
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API}/`)
       .then((res) => {
-        console.log(res);
         const { products }: IData = res.data;
         setProducts(products);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => console.log(e))
+      .finally(() => setFetching(false));
   }, []);
 
   return (
-    <ProductContext.Provider value={{ products }}>
+    <ProductContext.Provider value={{ products, fetching }}>
       {children}
     </ProductContext.Provider>
   );

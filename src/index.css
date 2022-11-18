@@ -139,3 +139,18 @@
     width: 90%;
   }
 }
+@keyframes spin-anim {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+.spin-anim {
+  animation-name: spin-anim;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+}
