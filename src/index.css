@@ -76,7 +76,7 @@
   border-radius: 1px;
   outline: none;
   width: 220px;
-  transition: all 1s ease-in-out;
+  transition: all 0.4s ease;
   font-size: 18px;
 }
 .input-label {
@@ -121,12 +121,21 @@
 }
 .invalid {
   color: #fff;
-  background-color: #ffd615;
+  background-color: #fba834;
   padding: 10px;
   border-radius: 5px;
   margin-top: 15px;
   transition: all 0.3s ease;
 }
 .invalid:hover {
+  background-color: #e3972c;
+}
+.invalid-input {
   background-color: #fba834;
+}
+@media screen and (max-width: 530px) {
+  .missing,
+  .invalid {
+    width: 90%;
+  }
 }

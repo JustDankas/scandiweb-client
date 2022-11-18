@@ -5,6 +5,7 @@ interface ISize {
   width: string;
   height: string;
   length: string;
+  err: string;
   changeWidth: (str: string) => void;
   changeHeight: (str: string) => void;
   changeLength: (str: string) => void;
@@ -13,6 +14,7 @@ function DimensionInput({
   width,
   height,
   length,
+  err,
   changeWidth,
   changeHeight,
   changeLength,
@@ -28,7 +30,7 @@ function DimensionInput({
           onChange={(e) => changeWidth(e.target.value)}
           value={width}
           id="width"
-          className="form-input"
+          className={`form-input ${err == "width" && "invalid-input"}`}
           placeholder="Width"
         />
       </div>
@@ -41,7 +43,7 @@ function DimensionInput({
           onChange={(e) => changeHeight(e.target.value)}
           value={height}
           id="height"
-          className="form-input"
+          className={`form-input ${err == "height" && "invalid-input"}`}
           placeholder="Height"
         />
       </div>
@@ -54,7 +56,7 @@ function DimensionInput({
           onChange={(e) => changeLength(e.target.value)}
           value={length}
           id="length"
-          className="form-input"
+          className={`form-input ${err == "length" && "invalid-input"}`}
           placeholder="Length"
         />
       </div>

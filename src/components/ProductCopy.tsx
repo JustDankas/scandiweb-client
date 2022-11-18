@@ -50,10 +50,14 @@ function ProductCopy({
   return (
     <li
       className="card relative flex flex-col min-w-[310px] h-[234px]
-    justify-center items-center mr-[50px] my-5"
+    justify-center items-center mr-[50px] my-5 overflow-hidden"
     >
       <h4 className={styles.ProductTitle}>{SKU}</h4>
-      <div className={styles.ProductText}>{Name}</div>
+      <div
+        className={`${styles.ProductText} max-w-[90%] text-center text-ellipsis overflow-hidden`}
+      >
+        {Name}
+      </div>
       <div className={styles.ProductText}>
         {formatCurrency(Price.toString())}
         {/* {Price.toString()} */}

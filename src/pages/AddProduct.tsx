@@ -22,21 +22,29 @@ function AddProduct() {
   const [width, setWidth] = React.useState<string>("");
   const [height, setHeight] = React.useState<string>("");
   const [length, setLength] = React.useState<string>("");
-  const [validationWarning, setValidationWarning] = React.useState(false);
+  const [validationWarning, setValidationWarning] = React.useState("");
   const [missingWarning, setMissingWarning] = React.useState(false);
 
   const navigate = useNavigate();
 
   const [dynamicInputs, setDynamicInputs] = React.useState<any>({
-    dvd: <DvdInput size={sizeInput} changeSize={(str) => setSizeInput(str)} />,
+    dvd: (
+      <DvdInput
+        err={validationWarning}
+        size={sizeInput}
+        changeSize={(str) => setSizeInput(str)}
+      />
+    ),
     book: (
       <WeightInput
+        err={validationWarning}
         Weight={weightInput}
         changeWeight={(str) => setWeightInput(str)}
       />
     ),
     furniture: (
       <DimensionInput
+        err={validationWarning}
         width={width}
         height={height}
         length={length}
@@ -50,16 +58,22 @@ function AddProduct() {
   React.useEffect(() => {
     setDynamicInputs({
       dvd: (
-        <DvdInput size={sizeInput} changeSize={(str) => setSizeInput(str)} />
+        <DvdInput
+          err={validationWarning}
+          size={sizeInput}
+          changeSize={(str) => setSizeInput(str)}
+        />
       ),
       book: (
         <WeightInput
+          err={validationWarning}
           Weight={weightInput}
           changeWeight={(str) => setWeightInput(str)}
         />
       ),
       furniture: (
         <DimensionInput
+          err={validationWarning}
           width={width}
           height={height}
           length={length}
@@ -69,7 +83,7 @@ function AddProduct() {
         />
       ),
     });
-  }, [dynamicInputs]);
+  }, [sizeInput, weightInput, width, length, height, validationWarning]);
 
   function handleValidate() {
     //  Inspect Missing values
@@ -92,20 +106,20 @@ function AddProduct() {
     setMissingWarning(false);
     //  Validate form
     if (SKU.length > 20) {
-      setValidationWarning(true);
+      setValidationWarning("SKU");
       return;
     }
-    if (name.length > 200) {
-      setValidationWarning(true);
+    if (name.length > 100) {
+      setValidationWarning("name");
       return;
     }
-    if (!/^-?\d+(?:[.,]\d*?)?$/.test(price)) {
-      setValidationWarning(true);
+    if (!/^-?\d+(?:[.,]\d{1,2}?)?$/.test(price)) {
+      setValidationWarning("price");
       return;
     }
     if (typeSelection == "dvd") {
       if (/[^0-9]/.test(sizeInput)) {
-        setValidationWarning(true);
+        setValidationWarning("size");
         console.log(Number(sizeInput));
         return;
       }
@@ -113,26 +127,30 @@ function AddProduct() {
     if (typeSelection == "book") {
       if (!/^-?\d+(?:[.,]\d{1,2}?)?$/.test(weightInput)) {
         console.log("WENT THROUGH");
-        setValidationWarning(true);
+        setValidationWarning("weight");
         console.log(weightInput);
         return;
       }
     }
     if (typeSelection == "furniture") {
-      if (
-        /[^0-9]/.test(width) ||
-        /[^0-9]/.test(height) ||
-        /[^0-9]/.test(length)
-      ) {
-        setValidationWarning(true);
+      if (/[^0-9]/.test(width)) {
+        setValidationWarning("width");
+        return;
+      }
+      if (/[^0-9]/.test(height)) {
+        setValidationWarning("height");
+        return;
+      }
+      if (/[^0-9]/.test(length)) {
+        setValidationWarning("length");
         return;
       }
     }
     axios
       .post(`${import.meta.env.VITE_API}/`, {
         SKU: SKU.toUpperCase(),
-        name,
-        price: price.slice(0, 5),
+        name: name.replaceAll("'", "\\'"),
+        price,
         type: typeSelection,
         size: typeSelection === "dvd" ? sizeInput : null,
         weight: typeSelection === "book" ? weightInput : null,
@@ -147,13 +165,13 @@ function AddProduct() {
   }
 
   function handleSKU_Change(value: string) {
-    if (value.length <= 20) setSKU(value.toUpperCase());
+    if (!/[^0-9a-zA-Z\-]/.test(value) && value.length <= 20)
+      setSKU(value.toUpperCase());
   }
-
   return (
     <div className="w-full flex justify-start items-center flex-col">
       <div
-        className="w-[90%] flex justify-between 
+        className="xs:w-[90%] w-full flex justify-between 
       line-bottom flex-col xs:flex-row py-2 xs:py-0"
       >
         <h1 className={`${styles.H1} text-center xs:text-start`}>
@@ -175,8 +193,11 @@ function AddProduct() {
           </Link>
         </div>
       </div>
-      <div className="w-[90%] flex justify-start items-center p-5">
-        <form id="product_form" className="flex flex-col">
+      <div className="xs:w-[90%] w-full flex justify-start items-center p-1 xs:p-5">
+        <form
+          id="product_form"
+          className="flex flex-col xs:items-start items-center"
+        >
           <div className="flex w-[310px] h-[54px] mt-3 overflow-hidden rounded-[2px]">
             <label className="input-label" htmlFor="sku">
               SKU
@@ -184,7 +205,9 @@ function AddProduct() {
             <input
               type="text"
               id="sku"
-              className="form-input"
+              className={`form-input ${
+                validationWarning == "SKU" && "invalid-input"
+              }`}
               placeholder="SKU"
               onChange={(e) => handleSKU_Change(e.target.value)}
               value={SKU}
@@ -197,7 +220,9 @@ function AddProduct() {
             <input
               type="text"
               id="name"
-              className="form-input"
+              className={`form-input ${
+                validationWarning == "name" && "invalid-input"
+              }`}
               placeholder="Name"
               onChange={(e) => setName(e.target.value)}
               value={name}
@@ -210,7 +235,9 @@ function AddProduct() {
             <input
               type="text"
               id="price"
-              className="form-input"
+              className={`form-input ${
+                validationWarning == "price" && "invalid-input"
+              }`}
               placeholder="Price"
               onChange={(e) => setPrice(e.target.value)}
               value={price}
@@ -233,7 +260,7 @@ function AddProduct() {
           </div>
           <div
             className="flex flex-col justify-center p-5
-          w-[380px] h-[280px] border border-black mt-12 overflow-hidden"
+          xs:w-[380px] w-[95%]  h-[280px] border border-black mt-12 overflow-hidden"
           >
             {typeSelection && dynamicInputs[typeSelection]}
             {/* {typeSelection == "dvd" && (
@@ -261,7 +288,7 @@ function AddProduct() {
           </div>
           {missingWarning && (
             <button
-              className="missing"
+              className="missing font-bold"
               onClick={() => setMissingWarning(false)}
             >
               Please, submit required data
@@ -269,8 +296,8 @@ function AddProduct() {
           )}
           {validationWarning && (
             <button
-              className="invalid"
-              onClick={() => setValidationWarning(false)}
+              className="invalid font-bold"
+              onClick={() => setValidationWarning("")}
             >
               Please, provide the data of indicated type
             </button>

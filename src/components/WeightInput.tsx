@@ -3,9 +3,10 @@ import { Component } from "react";
 
 interface IWeight {
   Weight: string;
+  err: string;
   changeWeight: (str: string) => void;
 }
-function WeightInput({ Weight, changeWeight }: IWeight) {
+function WeightInput({ Weight, err, changeWeight }: IWeight) {
   return (
     <div className="fade-in">
       <div className="flex w-[330px] h-[54px] mt-3 overflow-hidden rounded-[2px]">
@@ -17,7 +18,7 @@ function WeightInput({ Weight, changeWeight }: IWeight) {
           onChange={(e) => changeWeight(e.target.value)}
           value={Weight}
           id="weight"
-          className="form-input"
+          className={`form-input ${err == "weight" && "invalid-input"}`}
           placeholder="Weight"
         />
       </div>

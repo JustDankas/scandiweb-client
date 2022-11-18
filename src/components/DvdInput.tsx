@@ -3,9 +3,10 @@ import { Component } from "react";
 
 interface ISize {
   size: string;
+  err: string;
   changeSize: (str: string) => void;
 }
-function DvdInput({ size, changeSize }: ISize) {
+function DvdInput({ size, err, changeSize }: ISize) {
   return (
     <div className="fade-in">
       <div className="flex w-[330px] h-[54px] mt-3 overflow-hidden rounded-[2px]">
@@ -17,7 +18,7 @@ function DvdInput({ size, changeSize }: ISize) {
           onChange={(e) => changeSize(e.target.value)}
           value={size}
           id="size"
-          className="form-input"
+          className={`form-input ${err == "size" && "invalid-input"}`}
           placeholder="Size"
         />
       </div>
