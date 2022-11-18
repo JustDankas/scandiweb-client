@@ -130,7 +130,7 @@ function AddProduct() {
     }
     axios
       .post(`${import.meta.env.VITE_API}/`, {
-        SKU,
+        SKU: SKU.toUpperCase(),
         name,
         price: price.slice(0, 5),
         type: typeSelection,
@@ -147,7 +147,7 @@ function AddProduct() {
   }
 
   function handleSKU_Change(value: string) {
-    if (value.length <= 20) setSKU(value);
+    if (value.length <= 20) setSKU(value.toUpperCase());
   }
 
   return (
