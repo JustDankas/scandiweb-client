@@ -27,7 +27,34 @@ function AddProduct() {
 
   const navigate = useNavigate();
 
-  const [dynamicInputs, setDynamicInputs] = React.useState<any>({
+  // const [dynamicInputs, setDynamicInputs] = React.useState<any>({
+  //   dvd: (
+  //     <DvdInput
+  //       err={validationWarning}
+  //       size={sizeInput}
+  //       changeSize={(str) => setSizeInput(str)}
+  //     />
+  //   ),
+  //   book: (
+  //     <WeightInput
+  //       err={validationWarning}
+  //       Weight={weightInput}
+  //       changeWeight={(str) => setWeightInput(str)}
+  //     />
+  //   ),
+  //   furniture: (
+  //     <DimensionInput
+  //       err={validationWarning}
+  //       width={width}
+  //       height={height}
+  //       length={length}
+  //       changeWidth={(str) => setWidth(str)}
+  //       changeHeight={(str) => setHeight(str)}
+  //       changeLength={(str) => setLength(str)}
+  //     />
+  //   ),
+  // });
+  const dynamicInputs = {
     dvd: (
       <DvdInput
         err={validationWarning}
@@ -53,37 +80,37 @@ function AddProduct() {
         changeLength={(str) => setLength(str)}
       />
     ),
-  });
+  };
 
-  React.useEffect(() => {
-    setDynamicInputs({
-      dvd: (
-        <DvdInput
-          err={validationWarning}
-          size={sizeInput}
-          changeSize={(str) => setSizeInput(str)}
-        />
-      ),
-      book: (
-        <WeightInput
-          err={validationWarning}
-          Weight={weightInput}
-          changeWeight={(str) => setWeightInput(str)}
-        />
-      ),
-      furniture: (
-        <DimensionInput
-          err={validationWarning}
-          width={width}
-          height={height}
-          length={length}
-          changeWidth={(str) => setWidth(str)}
-          changeHeight={(str) => setHeight(str)}
-          changeLength={(str) => setLength(str)}
-        />
-      ),
-    });
-  }, [sizeInput, weightInput, width, length, height, validationWarning]);
+  // React.useEffect(() => {
+  //   setDynamicInputs({
+  //     dvd: (
+  //       <DvdInput
+  //         err={validationWarning}
+  //         size={sizeInput}
+  //         changeSize={(str) => setSizeInput(str)}
+  //       />
+  //     ),
+  //     book: (
+  //       <WeightInput
+  //         err={validationWarning}
+  //         Weight={weightInput}
+  //         changeWeight={(str) => setWeightInput(str)}
+  //       />
+  //     ),
+  //     furniture: (
+  //       <DimensionInput
+  //         err={validationWarning}
+  //         width={width}
+  //         height={height}
+  //         length={length}
+  //         changeWidth={(str) => setWidth(str)}
+  //         changeHeight={(str) => setHeight(str)}
+  //         changeLength={(str) => setLength(str)}
+  //       />
+  //     ),
+  //   });
+  // }, [sizeInput, weightInput, width, length, height, validationWarning]);
 
   function handleValidate() {
     //  Inspect Missing values
