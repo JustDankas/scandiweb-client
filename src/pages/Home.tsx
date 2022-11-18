@@ -6,18 +6,6 @@ import axios from "axios";
 import ProductCopy from "../components/ProductCopy";
 import { useProductContext } from "../ProductContext";
 
-interface IProductCopy {
-  SKU: string;
-  Name: string;
-  Price: number;
-  Type: string;
-  Size: number | null;
-  Weight: number | null;
-  Dimension: string | null;
-  Id: number;
-  handleRemove: (id: number) => void;
-}
-
 function Home() {
   const { products } = useProductContext();
   const [removeIdTable, setRemoveIdTable] = useState<Map<string, boolean>>(
@@ -33,25 +21,24 @@ function Home() {
   }
   function handleMassDelete() {
     const body = Array.from(removeIdTable.keys());
-    console.log(body);
     axios
       .put(`${import.meta.env.VITE_API}/`, {
         deleteIds: body,
       })
-      .then((res) => console.log(res))
+      .then((res) => location.reload())
       .catch((e) => console.log(e));
   }
 
   // console.log(productCopies);
   return (
     <div className="w-full flex justify-start items-center flex-col">
-      <div className="w-[90%] flex justify-between line-bottom ss:flex-row flex-col">
+      <div className="w-[90%] flex justify-between line-bottom py-2 xs:py-0 ss:flex-row flex-col">
         <h1 className={`${styles.H1} text-center ss:text-start`}>
           Product List
         </h1>
         <div className={`flexCenter`}>
           <Link
-            className="primarybutton w-[50px] text-[20px] py-[5px] w-[92px]"
+            className="primarybutton text-[20px] py-[5px] w-[92px]"
             to={"/add-product"}
           >
             ADD
@@ -67,13 +54,14 @@ function Home() {
       </div>
       <ul className="w-[90%] flex flex-wrap list-none p-5 m-0">
         {products?.map((product) => {
-          // const { ProductCopyId, ProductCopySKU } = productCopy;
           return (
             <ProductCopy
+              key={product.SKU}
               {...product}
               handleRemove={(id) => handleAddRemove(id)}
             />
           );
+          return <></>;
         })}
       </ul>
     </div>

@@ -7,6 +7,10 @@ import DvdInput from "../components/DvdInput";
 import WeightInput from "../components/WeightInput";
 import styles from "../styles";
 
+// interface ITest {
+//   dvd:React.ReactElement<{size:string,changeSize:(str:string)=>React.SetStateAction<string>}>
+// }
+
 function AddProduct() {
   const [typeSelection, setTypeSelection] = React.useState("dvd");
 
@@ -22,6 +26,50 @@ function AddProduct() {
   const [missingWarning, setMissingWarning] = React.useState(false);
 
   const navigate = useNavigate();
+
+  const [dynamicInputs, setDynamicInputs] = React.useState<any>({
+    dvd: <DvdInput size={sizeInput} changeSize={(str) => setSizeInput(str)} />,
+    book: (
+      <WeightInput
+        Weight={weightInput}
+        changeWeight={(str) => setWeightInput(str)}
+      />
+    ),
+    furniture: (
+      <DimensionInput
+        width={width}
+        height={height}
+        length={length}
+        changeWidth={(str) => setWidth(str)}
+        changeHeight={(str) => setHeight(str)}
+        changeLength={(str) => setLength(str)}
+      />
+    ),
+  });
+
+  React.useEffect(() => {
+    setDynamicInputs({
+      dvd: (
+        <DvdInput size={sizeInput} changeSize={(str) => setSizeInput(str)} />
+      ),
+      book: (
+        <WeightInput
+          Weight={weightInput}
+          changeWeight={(str) => setWeightInput(str)}
+        />
+      ),
+      furniture: (
+        <DimensionInput
+          width={width}
+          height={height}
+          length={length}
+          changeWidth={(str) => setWidth(str)}
+          changeHeight={(str) => setHeight(str)}
+          changeLength={(str) => setLength(str)}
+        />
+      ),
+    });
+  }, [dynamicInputs]);
 
   function handleValidate() {
     //  Inspect Missing values
@@ -63,7 +111,8 @@ function AddProduct() {
       }
     }
     if (typeSelection == "book") {
-      if (/[^0-9]/.test(weightInput)) {
+      if (!/^-?\d+(?:[.,]\d{1,2}?)?$/.test(weightInput)) {
+        console.log("WENT THROUGH");
         setValidationWarning(true);
         console.log(weightInput);
         return;
@@ -79,7 +128,6 @@ function AddProduct() {
         return;
       }
     }
-
     axios
       .post(`${import.meta.env.VITE_API}/`, {
         SKU,
@@ -187,8 +235,8 @@ function AddProduct() {
             className="flex flex-col justify-center p-5
           w-[380px] h-[280px] border border-black mt-12 overflow-hidden"
           >
-            {/* {typeSelection && types[typeSelection]} */}
-            {typeSelection == "dvd" && (
+            {typeSelection && dynamicInputs[typeSelection]}
+            {/* {typeSelection == "dvd" && (
               <DvdInput
                 size={sizeInput}
                 changeSize={(str) => setSizeInput(str)}
@@ -209,7 +257,7 @@ function AddProduct() {
                 changeHeight={(str) => setHeight(str)}
                 changeLength={(str) => setLength(str)}
               />
-            )}
+            )} */}
           </div>
           {missingWarning && (
             <button

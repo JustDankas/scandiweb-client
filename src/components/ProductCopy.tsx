@@ -24,7 +24,7 @@ function ProductCopy({
   Dimension,
   handleRemove,
 }: IProductCopy) {
-  const { products } = useProductContext();
+  // const { products } = useProductContext();
   const [types, setTypes] = React.useState<any>({
     dvd: `Size: ${Size} MB`,
     book: `Weight: ${Weight} KG`,
@@ -32,15 +32,15 @@ function ProductCopy({
   });
   const [clicked, setClicked] = React.useState(false);
 
-  React.useEffect(() => {
-    if (products) {
-      setTypes({
-        dvd: `Size: ${Size} MB`,
-        book: `Weight: ${Weight} KG`,
-        furniture: `Dimension: ${Dimension}`,
-      });
-    }
-  }, [products]);
+  // React.useEffect(() => {
+  //   if (products) {
+  //     setTypes({
+  //       dvd: `Size: ${Size} MB`,
+  //       book: `Weight: ${Weight} KG`,
+  //       furniture: `Dimension: ${Dimension}`,
+  //     });
+  //   }
+  // }, [products]);
 
   function handleRemoveProduct() {
     setClicked((prev) => !prev);
@@ -56,8 +56,9 @@ function ProductCopy({
       <div className={styles.ProductText}>{Name}</div>
       <div className={styles.ProductText}>
         {formatCurrency(Price.toString())}
+        {/* {Price.toString()} */}
       </div>
-      {Type && <div>{types[Type]}</div>}
+      {Type && <div>{types[Type.toLocaleLowerCase()]}</div>}
       <input
         type="checkbox"
         className={`delete-checkbox`}
@@ -69,12 +70,12 @@ function ProductCopy({
 
 function formatCurrency(price: string) {
   const tmp = price.split(".");
-  if (tmp.length == 1) return price + ".00";
+  if (tmp.length == 1) return price + ".00$";
 
   while (tmp[1].length < 2) {
-    price += "0";
+    tmp[1] += "0";
   }
-  return tmp.join(".");
+  return tmp.join(".") + "$";
 }
 
 export default ProductCopy;

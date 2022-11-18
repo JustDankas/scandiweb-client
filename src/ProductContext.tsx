@@ -13,7 +13,6 @@ interface IProductProvider {
 
 interface IData {
   products: IProduct[];
-  // productCopies: IProductCopy[];
 }
 
 interface IProduct {
@@ -25,14 +24,9 @@ interface IProduct {
   Weight: number | null;
   Dimension: string | null;
 }
-interface IProductCopy {
-  ProductCopyId: number;
-  ProductCopySKU: string;
-}
 
 interface IProductContext {
   products: IProduct[];
-  // productCopies: IProductCopy[];
 }
 
 const ProductContext = createContext({} as IProductContext);
@@ -43,7 +37,6 @@ export function useProductContext() {
 
 export function ProductProvider({ children }: IProductProvider) {
   const [products, setProducts] = useState<IProduct[]>([]);
-  // const [productCopies, setProductCopies] = useState<IProductCopy[]>([]);
 
   useEffect(() => {
     axios
@@ -51,21 +44,7 @@ export function ProductProvider({ children }: IProductProvider) {
       .then((res) => {
         console.log(res);
         const { products }: IData = res.data;
-        // const tmp: Map<string, IProduct> = new Map();
-        // products.forEach((element) => {
-        //   const { SKU, Name, Price, Type, Size, Weight, Dimension } = element;
-        //   tmp.set(SKU, {
-        //     SKU,
-        //     Name,
-        //     Price,
-        //     Type,
-        //     Size,
-        //     Weight,
-        //     Dimension,
-        //   });
-        // });
         setProducts(products);
-        // setProductCopies(productCopies);
       })
       .catch((e) => console.log(e));
   }, []);
